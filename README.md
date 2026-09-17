@@ -33,7 +33,7 @@ Para compilar e executar o projeto, você precisará ter instalado em seu ambien
 
 ### Baixar repositório do github
 Abra o terminal a partir do diretorio em que deseja alocar o projeto e digite os seguintes comandos:
-```
+```bash
 # Clonar repositorio na máquina local
 git clone https://github.com/Lucassilv7/tonto_compiler.git
 
@@ -48,7 +48,7 @@ code
 
 Para gerar o executável do projeto, certifique-se de que está no diretório raiz do projeto e siga os seguintes passos no terminal
 
-```
+```bash
 # 1. Acesse a pasta build (crie-a caso não exista):
 mkdir -p build && cd build
 
@@ -62,7 +62,7 @@ make
 ### Execução
 Para executar o projeto, siga os seguintes comandos no terminal:
 
-```
+```bash
 # 1. Verifique em que diretório está (caso ainda esteja em build), execute o aquivo passando o conteudo de teste.tonto como argumaneto
 ./tonto ../tests/nome_do_arquivo.tonto
 
