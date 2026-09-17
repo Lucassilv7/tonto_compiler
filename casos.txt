@@ -1,0 +1,6 @@
+estereotipo_classe event situation process category mixin phaseMixin roleMixin historicalRoleMixin kind collective quantity quality mode intrisicMode extrinsicMode subkind phase role historicalRole 
+estereotipo_relacao material derivation comparative mediation characterization externalDependence componentOf memberOf subCollectionOf subQualityOf instantiation termination participational participation historicalDependence creation manifestation bringsAbout triggers composition aggregation inherence value formal constitution
+palavra_reservada genset disjoint complete general specifics where package import functional-complexes
+tipo_nativo number string boolean date time datetime 
+meta_atributo ordered const derived subsets redefines 
+
