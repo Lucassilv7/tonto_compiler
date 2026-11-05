@@ -32,7 +32,7 @@ ontologia:
     | ontologia construto
     ;
 
-/* 2. Construtos Principais (Ignora erros isolados para não travar a compilação) */
+/* 2. Construtos Principais */
 construto:
     declaracao_pacote_ou_import
     | declaracao_classe
@@ -91,7 +91,7 @@ lista_instancias:
     | lista_instancias error { yyerrok; yyclearin; } 
     ;
 
-/* 6. Conjuntos de Generalizações (disjoint complete genset Nome { ... }) */
+/* 6. Conjuntos de Generalizações */
 declaracao_genset:
     PALAVRA_RESERVADA PALAVRA_RESERVADA PALAVRA_RESERVADA CONV_CLASSE '{' conteudo_generico '}' {
         if ($1 == "disjoint" && $2 == "complete" && $3 == "genset") {
@@ -100,7 +100,7 @@ declaracao_genset:
     }
     ;
 
-/* 7. Declaração de Relações Externas (@material relation X -- rel -- Y) */
+/* 7. Declaração de Relações Externas */
 declaracao_relacao:
     ESTEREOTIPO_RELACAO CONV_RELACAO CONV_CLASSE CONV_RELACAO CONV_CLASSE {
         if ($2 == "relation") {
@@ -125,7 +125,6 @@ token_qualquer:
 %%
 
 void yyerror(const char* s) {
-    // Mantemos a função silenciosa para erros internos já recuperados pelo yyerrok
 }
 
 int main(int argc, char** argv) {
