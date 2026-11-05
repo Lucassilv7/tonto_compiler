@@ -8,6 +8,7 @@
 using namespace std;
 
 static unordered_map<string, int> tabela;
+static unordered_map<string, Simbolo> tabela_sintatica;
 
 void inserir(int tipo, const string& palavra) {
     tabela[palavra] = tipo;
@@ -55,4 +56,34 @@ void carregar_tabela(const string& caminho_casos) {
             inserir(tipo, palavra);
         }
     }
+}
+
+void inserir_simbolo_sintatico(const string& nome, const string& categoria, const string& escopo) {
+    string chave = escopo + "::" + nome;
+    tabela_sintatica[chave] = {nome, categoria, escopo};
+}
+
+void imprimir_relatorio_sintatico(){
+    cout << "\n=========================================\n";
+    cout << "  RELATORIO DE ANALISE SINTATICA (TONTO) \n";
+    cout << "=========================================\n";
+
+    int qtd_pacotes = 0, qtd_classes = 0, qtd_relacoes = 0;
+
+    for (const auto& par : tabela_sintatica) {
+        const Simbolo& s = par.second;
+        cout << "[" << s.categoria << "] " << s.nome << " (Escopo: " << s.escopo << ")\n";
+        
+        if (s.categoria.find("PACOTE") != string::npos) qtd_pacotes++;
+        else if (s.categoria.find("CLASSE") != string::npos) qtd_classes++;
+        else if (s.categoria.find("RELACAO") != string::npos) qtd_relacoes++;
+        else if (s.categoria.find("ENUM") != string::npos) qtd_classes++; // Conta Enum como classe
+    }
+
+    cout << "-----------------------------------------\n";
+    cout << "Resumo:\n";
+    cout << "- Pacotes: " << qtd_pacotes << "\n";
+    cout << "- Classes: " << qtd_classes << "\n";
+    cout << "- Relacoes: " << qtd_relacoes << "\n";
+    cout << "=========================================\n";
 }

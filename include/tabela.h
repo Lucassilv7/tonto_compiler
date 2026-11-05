@@ -1,7 +1,9 @@
 #pragma once
 
 #include <string>
-#include "tokens.h"
+#include "parser.tab.hpp"
+
+#define CONSULTA 0
 
 using std::string;
 
@@ -19,3 +21,13 @@ void inserir(int tipo, const string& palavra);
 // ou CONSULTA (0) se a palavra não é uma palavra fixa da linguagem —
 // nesse caso, quem chamou deve classificar por convenção de escrita.
 int buscar(const string& palavra);
+
+struct Simbolo
+{
+    string nome;
+    string categoria; // "PACOTE", "CLASSE", "RELACAO", "ENUM", "GENSET"
+    string escopo;
+};
+
+void inserir_simbolo_sintatico(const string& nome, const string& categoria, const string& escopo);
+void imprimir_relatorio_sintatico();

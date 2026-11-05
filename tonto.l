@@ -3,10 +3,12 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
-#include "tokens.h"
+#include "parser.tab.hpp"
 #include "tabela.h"
 
 using namespace std;
+
+int classificar(const string& s);
 
 // Variáveis para rastrear a posição exata de cada token no código-fonte
 int linha = 1;
@@ -15,7 +17,8 @@ int coluna = 1;
 // Contadores para a Tabela de Síntese
 int cont_classes = 0;
 int cont_relacoes = 0;
-int cont_keywords = 0;
+int cont_est_class = 0;
+int cont_est_relacao = 0;
 int cont_individuos = 0;
 int cont_reservados = 0;
 int cont_meta = 0;
@@ -47,11 +50,15 @@ simbolo "{"|"}"|"("|")"|"["|"]"|".."|"<>--"|"--<>"|"*"|"@"|":"
 \n { linha++; coluna = 1; }
 "//"[^\n]* { /* ignora comentários de linha */ }
 
-{palavra} {processar_palavra(yytext, coluna);}
+{palavra} {
+    int t = classificar(yytext);
+    yylval = strdup(yytext); // Armazena o texto do token para o parser
+    return t;
+}
 
 {simbolo} {
-    cout << "<SIMBOLO, " << yytext << "> linha " << linha
-     << ", coluna " << (coluna - yyleng) << endl;
+        yylval = strdup(yytext); // Armazena o texto do token para o parser
+        return yytext[0]; // Retorna o símbolo como token
      }
 
 . {
@@ -101,13 +108,13 @@ const char* nome_categoria(int t) {
 void processar_palavra(const string& s, int col_inicio){
     int t = classificar(s);
     switch (t){
-        case ESTEREOTIPO_CLASSE:
-        case ESTEREOTIPO_RELACAO: cont_keywords++;   break;
-        case PALAVRA_RESERVADA:   cont_reservados++; break;
-        case META_ATRIBUTO:       cont_meta++;       break;
+        case ESTEREOTIPO_CLASSE:  cont_est_class++;      break;
+        case ESTEREOTIPO_RELACAO: cont_est_relacao++;    break;
+        case PALAVRA_RESERVADA:   cont_reservados++;     break;
+        case META_ATRIBUTO:       cont_meta++;           break;
         case CONV_CLASSE:
-        case TIPO_NOVO:           cont_classes++;    break;
-        case CONV_RELACAO:        cont_relacoes++;   break;
+        case TIPO_NOVO:           cont_classes++;        break;
+        case CONV_RELACAO:        cont_relacoes++;       break;
         case CONV_INSTANCIA:      cont_individuos++; break;
         case ERRO_LEXICO:
             cerr << "Erro lexico na linha " << linha << ", coluna " << col_inicio
@@ -118,31 +125,3 @@ void processar_palavra(const string& s, int col_inicio){
          << "linha " << linha << ", coluna " << col_inicio << endl;
 }
 
-int main(int argc, char** argv){
-    
-    carregar_tabela("../casos.txt");
-
-    if (argc > 1) {
-        extern FILE *yyin; 
-        yyin = fopen(argv[1], "r");
-        if (!yyin) {
-            cerr << "Erro ao abrir o arquivo de teste: " << argv[1] << endl;
-            return 1;
-        }
-    } else {
-        cout << "Uso: ./tonto <caminho_do_arquivo.tonto>" << endl;
-        return 1;
-    }
-
-    yylex(); // Inicia o processo de análise léxica
-
-    cout << "\n--- Tabela de Síntese ---" << endl;
-    cout << "Classes:               " << cont_classes    << "\n";
-    cout << "Relações:              " << cont_relacoes   << "\n";
-    cout << "Palavras-chave:        " << cont_keywords   << "\n";
-    cout << "Indivíduos:            " << cont_individuos << "\n";
-    cout << "Palavras reservadas:   " << cont_reservados << "\n";
-    cout << "Meta-atributos:        " << cont_meta       << "\n";
-
-    return 0;
-}
